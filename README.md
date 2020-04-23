@@ -1,4 +1,6 @@
 # gKeeVee - A simple key-value store DB in Go
+[![Build Status](https://travis-ci.org/kadnan/gkeevee.svg?branch=master)](https://travis-ci.org/kadnan/gkeevee)
+
 `gKeeVee` is a simple file based key-value store DB written in Go language. It uses [MessagePack](https://msgpack.org/index.html) to store the compressed data into a file.
 
 ## What's new in gKeeVee?
