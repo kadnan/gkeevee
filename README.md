@@ -14,3 +14,31 @@ Infact nothing. I made this package as a part of my journey learning Golang. The
 
 ## Test
 `go test -v`
+
+## Example
+
+```
+package main
+
+import (
+	"fmt"
+
+	gkeevee "github.com/kadnan/gKeeVee/gKeeVee"
+)
+
+func main() {
+	f, err := gkeevee.Load("mytesting.db")
+	if err != nil {
+		println(err)
+	}
+	gkeevee.Set("FNAME", "ADNAN")
+	gkeevee.Set("LNAME", "SIDDIQI")
+
+	val, err := gkeevee.Get("FNAME")
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(val)
+	_, err = gkeevee.Save(f)
+}
+```
