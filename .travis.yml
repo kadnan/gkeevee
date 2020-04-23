@@ -1,0 +1,14 @@
+language: go
+
+env: GO111MODULE=on GOFLAGS='-mod vendor'
+
+go:
+    1.12.x
+
+install: true
+
+notifications:
+    email: false
+
+script:
+    - go test -v
