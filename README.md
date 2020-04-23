@@ -6,3 +6,11 @@
 Infact nothing. I made this package as a part of my journey learning Golang. There are many other packages available like **Badger** which provides more facilities. 
 
 `gKeeVee` is a very simple db that only accepts `strings` as value. It is by design. If you want to store values like `int`, `float` etc, you will have to cast them to strings first and then store. For complex structures like `map` or `struct` you can convert them into a JSON string and store them as value.
+
+## Installation
+
+- Install `msgpack` package:
+`go get github.com/vmihailenco/msgpack/`
+
+## Test
+`go test -v`
