@@ -26,9 +26,9 @@ func TestSet(t *testing.T) {
 //TestGet implements...
 func TestGet(t *testing.T) {
 	result, _ := gkeevee.Get("Adnan")
-	fmt.Println(result)
+	fmt.Println("Priting ReSULT")
 
-	if result != "-" {
+	if result != "0" {
 		t.Errorf("TestGet Failed")
 	}
 }
