@@ -3,34 +3,36 @@ package gkeevee
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"os"
-	"strings"
 
 	"github.com/vmihailenco/msgpack"
 )
 
+const fileNotFound string = "-1"
+const dbFileNotFound string = "-2"
+const decodingFailed string = "-3"
+const resetFailed string = "-4"
+
 var u = make(map[string]string) //to store values
-var isLoaded bool = false       //to check whether file was loaded or not before calling any route
+var isLoaded = false            //to check whether file was loaded or not before calling any route
 
 // Get function retrieves the value of the given key. If failed, it returns error.
 func Get(key string) (string, error) {
 	if !isLoaded {
-		return "-", errors.New("The db file was not loaded")
+		return "0", errors.New(fileNotFound)
 	}
 	v, found := u[key]
 	if found {
-		v = u[key]
 		return v, nil
 	}
-	return "-", errors.New("-1")
+	return "0", errors.New(fileNotFound)
 }
 
 //Set function assigns a value to the given key. If successful it returns 1
 func Set(key string, value string) (int8, error) {
 	if !isLoaded {
-		return -1, errors.New("The db file was not loaded")
+		return -1, errors.New(dbFileNotFound)
 	}
 	u[key] = value
 	return 1, nil
@@ -39,24 +41,20 @@ func Set(key string, value string) (int8, error) {
 // Save function saves the value in the db file.
 func Save(fileHandle *os.File) (int8, error) {
 	if !isLoaded {
-		return -1, errors.New("The db file was not loaded")
+		return -1, errors.New(dbFileNotFound)
 	}
-	_, err := os.Stat(fileHandle.Name())
 
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	if os.IsNotExist(err) {
-		return -1, errors.New("-1")
-	}
 	defer fileHandle.Close()
 
 	if len(u) > 0 {
-		b, _ := msgpack.Marshal(u)
+		b, err := msgpack.Marshal(u)
+
+		if err != nil {
+			return 0, errors.New(decodingFailed)
+		}
 
 		msgpack.Unmarshal([]byte(b), &u)
-		fmt.Println(u)
-		fileHandle.WriteString(string(b))
+		fileHandle.Write(b)
 	}
 
 	return 1, nil
@@ -65,6 +63,9 @@ func Save(fileHandle *os.File) (int8, error) {
 // Load function opens the file and return the handler
 func Load(path string) (*os.File, error) {
 	db, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_RDWR, 0644)
+	if err != nil {
+		return nil, err
+	}
 
 	// Read file, line by line
 	var text = make([]byte, 1024)
@@ -75,23 +76,19 @@ func Load(path string) (*os.File, error) {
 		if err == io.EOF {
 			break
 		}
-		if err != nil && err != io.EOF {
-			fmt.Println(err.Error())
-			break
-		}
-	}
-	if err != nil {
-		return nil, err
 	}
 
-	if string(text) != "" {
-		db.Truncate(0)
-		db.Seek(0, 0)
-		//db.WriteString("")
+	if len(text) != 0 {
+		err := db.Truncate(0)
+		if err != nil {
+			return nil, errors.New(resetFailed)
+		}
+		_, err = db.Seek(0, 0)
+		if err != nil {
+			return nil, errors.New(resetFailed)
+		}
 		data := string(text)
-		data = strings.TrimSpace(data)
 		msgpack.Unmarshal([]byte(data), &u)
-		//fmt.Println(u)
 	}
 	isLoaded = true
 	return db, nil

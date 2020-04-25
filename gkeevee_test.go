@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 
 	gkeevee "github.com/kadnan/gKeeVee/gKeeVee"
@@ -26,7 +25,6 @@ func TestSet(t *testing.T) {
 //TestGet implements...
 func TestGet(t *testing.T) {
 	result, _ := gkeevee.Get("Adnan")
-	fmt.Println("Priting ReSULT")
 
 	if result != "0" {
 		t.Errorf("TestGet Failed")
