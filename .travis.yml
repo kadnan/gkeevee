@@ -5,7 +5,7 @@ env:
     - GOFLAGS='-mod vendor' 
     - GIMME_DEBUG=1
 go:
-    - "1.14"
+    - "stable"
 
 install: true
 
