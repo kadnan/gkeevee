@@ -1,16 +1,15 @@
 language: go
 
-env: 
-    - GO111MODULE=on 
-    - GOFLAGS='-mod vendor' 
-    - GIMME_DEBUG=1
-go:
-    - "stable"
+go: stable
 
-install: true
+env:
+  global:
+    - GIMME_DEBUG=1
+
+    install: skip
 
 notifications:
-    email: false
+  email: false
 
 script:
     - go test -v
