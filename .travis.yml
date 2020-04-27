@@ -6,7 +6,7 @@ env:
   global:
     - GIMME_DEBUG=1
 
-    install: skip
+install: skip
 
 notifications:
   email: false
