@@ -3,8 +3,6 @@ language: go
 env: 
     - GO111MODULE=on 
     - GOFLAGS='-mod vendor' 
-    - GIMME_DEBUG=1
-
 go:
     - "1.14"
 
